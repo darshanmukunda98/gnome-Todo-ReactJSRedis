@@ -32,10 +32,10 @@ export const insertTodoController = async (req, res) => {
 
 export const updateTodoByIdController = async (req, res, next) => {
   try {
-    if (req.params.id.length < 24) {
+    /* if (req.params.id.length < 24) {
       res.status(400).json({ message: 'Invalid Id' });
       throw new Error('Invalid Id');
-    }
+    } */
     if (isEmptyObject(req.body)) {
       res.status(400).json({ message: 'Empty Body Sent' });
       throw new Error('Empty Body Sent');

@@ -48,10 +48,10 @@ export async function insertOneTodo(todo) {
     // });
     // return rename_idToid(await insertedTodo.toArray());
     let id = await client.GET('id');
-    todo.id = Number(id)
+    todo.id = Number(id);
     await client.json.ARRAPPEND('todos', '$', todo);
     id = await client.INCR('id');
-    
+    return todo;
   } catch (err) {
     console.log(err);
     return err;
@@ -60,15 +60,21 @@ export async function insertOneTodo(todo) {
 
 export async function addTodoFields(id, todofields) {
   try {
-    const filter = {
-      _id: ObjectId(id)
-    };
-    const updateDoc = {
-      $set: todofields
-    };
-    await collection.updateOne(filter, updateDoc);
-    let updatedTodo = collection.find({ _id: ObjectId(id) });
-    return renameKey((await updatedTodo.toArray())[0], '_id', 'id');
+    // const filter = {
+    //   _id: ObjectId(id)
+    // };
+    // const updateDoc = {
+    //   $set: todofields
+    // };
+    // await collection.updateOne(filter, updateDoc);
+    // let updatedTodo = collection.find({ _id: ObjectId(id) });
+    // return renameKey((await updatedTodo.toArray())[0], '_id', 'id');
+    let todofield = Object.keys(todofields)[0];
+    await client.json.SET(
+      'todos',
+      `[${id}].` + todofield,
+      todofields[todofield]
+    );
   } catch (err) {
     console.log(err);
     return err;
@@ -77,14 +83,14 @@ export async function addTodoFields(id, todofields) {
 
 export async function deleteTodo(id) {
   try {
-    const filter = {
+    /* const filter = {
       _id: ObjectId(id)
     };
     const updateDoc = {
       $set: { deleted: true }
     };
     const result = await collection.updateOne(filter, updateDoc);
-    return result.modifiedCount > 0 && result.matchedCount > 0;
+    return result.modifiedCount > 0 && result.matchedCount > 0; */
   } catch (err) {
     console.log(err);
     return err;
