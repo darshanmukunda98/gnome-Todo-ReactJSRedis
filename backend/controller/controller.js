@@ -50,10 +50,10 @@ export const updateTodoByIdController = async (req, res, next) => {
 
 export const deleteByIdController = async (req, res, next) => {
   try {
-    if (req.params.id.length < 24) {
+    /* if (req.params.id.length < 24) {
       res.status(400).json({ message: 'Invalid Id' });
       throw new Error('Invalid Id');
-    }
+    } */
     const result = await deleteTodo(req.params.id);
     res.json({ deleted: result });
   } catch (err) {

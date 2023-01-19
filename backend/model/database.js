@@ -91,6 +91,7 @@ export async function deleteTodo(id) {
     };
     const result = await collection.updateOne(filter, updateDoc);
     return result.modifiedCount > 0 && result.matchedCount > 0; */
+    await client.json.SET('todos', `[${id}].deleted`, true);
   } catch (err) {
     console.log(err);
     return err;
