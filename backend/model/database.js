@@ -1,17 +1,38 @@
-import { MongoClient, ObjectId } from 'mongodb';
+//import { MongoClient, ObjectId } from 'mongodb';
+import { createClient } from 'redis';
 import { isEmptyObject, rename_idToid, renameKey } from '../utility.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const client = new MongoClient(process.env.DB_URL);
-const db = client.db(process.env.DB_NAME);
-const collection = db.collection(process.env.DB_COLLECTION);
+//const client = new MongoClient(process.env.DB_URL);
+//const db = client.db(process.env.DB_NAME);
+//const collection = db.collection(process.env.DB_COLLECTION);
+const client = createClient();
+await client.connect();
+
+//await client.json.SET('todos','$',[]);
+//await client.SET('id',0)
+
+// let id = await client.GET('id');
+
+// await client.json.ARRAPPEND('todos', '$', {
+//   id: Number(id),
+//   date: '',
+//   deleted: true,
+//   done: true,
+//   notes: '',
+//   priority: 'none',
+//   title: 'todo 3'
+// });
+// id = await client.INCR('id');
+// const value = await client.json.get('todos');
+//console.log(value);
 
 export async function getAllTodos() {
   try {
-    const todos = await collection.find({}).toArray();
-    return rename_idToid(todos);
+    const value = await client.json.get('todos');
+    return value;
   } catch (err) {
     console.log(err);
     return err;
@@ -21,11 +42,16 @@ export async function getAllTodos() {
 export async function insertOneTodo(todo) {
   let insertedTodo = {};
   try {
-    insertedTodo = await collection.insertOne(todo);
-    insertedTodo = collection.find({
-      _id: ObjectId(insertedTodo.insertedId + '')
-    });
-    return rename_idToid(await insertedTodo.toArray());
+    // insertedTodo = await collection.insertOne(todo);
+    // insertedTodo = collection.find({
+    //   _id: ObjectId(insertedTodo.insertedId + '')
+    // });
+    // return rename_idToid(await insertedTodo.toArray());
+    let id = await client.GET('id');
+    todo.id = Number(id)
+    await client.json.ARRAPPEND('todos', '$', todo);
+    id = await client.INCR('id');
+    
   } catch (err) {
     console.log(err);
     return err;
