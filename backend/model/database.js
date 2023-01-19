@@ -100,12 +100,14 @@ export async function deleteTodo(id) {
 
 export async function markAllTodosDone() {
   try {
-    const todos = await collection.find({}).toArray();
+    /* const todos = await collection.find({}).toArray();
     const filter = {};
     const updateDoc = {
       $set: { done: !todos.every((todo) => todo.done) }
     };
-    await collection.updateMany(filter, updateDoc);
+    await collection.updateMany(filter, updateDoc); */
+    let all_todos_done_status = await client.json.get('todos')
+    await client.json.SET('todos',`[*].done`,!all_todos_done_status.every((todo) => todo.done))
   } catch (err) {
     console.log(err);
     return err;
