@@ -5,6 +5,7 @@ import {
   deleteTodo,
   markAllTodosDone
 } from '../model/database.js';
+
 import { isEmptyObject, rename_idToid, renameKey } from '../utility.js';
 
 export const getAllTodosController = async (req, res) => {
@@ -21,7 +22,7 @@ export const insertTodoController = async (req, res) => {
   try {
     if (isEmptyObject(req.body)) {
       res.status(400).json({ message: 'Empty Body Sent' });
-      throw new Error('Empty Body Sent');
+     // throw new Error('Empty Body Sent'); //return from the function
     }
     const result = await insertOneTodo(req.body);
     res.json(result);
@@ -32,10 +33,6 @@ export const insertTodoController = async (req, res) => {
 
 export const updateTodoByIdController = async (req, res, next) => {
   try {
-    /* if (req.params.id.length < 24) {
-      res.status(400).json({ message: 'Invalid Id' });
-      throw new Error('Invalid Id');
-    } */
     if (isEmptyObject(req.body)) {
       res.status(400).json({ message: 'Empty Body Sent' });
       throw new Error('Empty Body Sent');
@@ -50,10 +47,6 @@ export const updateTodoByIdController = async (req, res, next) => {
 
 export const deleteByIdController = async (req, res, next) => {
   try {
-    /* if (req.params.id.length < 24) {
-      res.status(400).json({ message: 'Invalid Id' });
-      throw new Error('Invalid Id');
-    } */
     const result = await deleteTodo(req.params.id);
     res.json({ deleted: result });
   } catch (err) {
